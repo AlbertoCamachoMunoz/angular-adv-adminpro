@@ -9,6 +9,7 @@ import { Grafica1Component } from './grafica1/grafica1.component';
 
 const routes: Routes = [
     { 
+        // comentario desde github
         // ruta padre ej http://localhost:4200/dashboard
         path: 'dashboard', 
         component: PagesComponent,
