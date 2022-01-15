@@ -1,31 +1,29 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+// Modulos
 import { AppRoutingModule } from './app-routing.module';
+import { PagesModule } from './pages/pages.module';
+import { AuthModule } from './auth/auth.module';
+
 
 import { AppComponent } from './app.component';
-
-
-import { BreadcrumbsComponent } from './shared/breadcrumbs/breadcrumbs.component';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
-import { HeaderComponent } from './shared/header/header.component';
-
-import { PagesComponent } from './pages/pages.component';
+import { NopagefoundComponent } from './nopagefound/nopagefound.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BreadcrumbsComponent,
-    SidebarComponent,
-    HeaderComponent,
-
-    PagesComponent
+    NopagefoundComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PagesModule,
+    AuthModule
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
 // clase 20 Agular Principales Avanzado
 // clase 21 rutas hijas Agular Avanzado
