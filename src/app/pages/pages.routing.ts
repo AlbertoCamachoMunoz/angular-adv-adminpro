@@ -11,6 +11,7 @@ const routes: Routes = [
     { 
         // comentario desde github
         // ruta padre ej http://localhost:4200/dashboard
+        // ruta padre ej http://localhost:4200/dashboard
         path: 'dashboard', 
         component: PagesComponent,
         children:[
@@ -18,7 +19,6 @@ const routes: Routes = [
             { path: '', component: DashboardComponent },
             { path: 'progress', component: ProgressComponent },
             { path: 'grafica1', component: Grafica1Component },
-            // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
     },
 
