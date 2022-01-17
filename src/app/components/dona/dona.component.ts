@@ -19,7 +19,7 @@ export class DonaComponent {
   };
 
   @Input() public type_dona : ChartType = 'doughnut';
-  
+  @Input('saludo') saludo!: string;
 
   // public doughnutChartLabels: string[] = [ 'Download Sales', 'In-Store Sales', 'Mail-Order Sales' ];
   // public doughnutChartData: ChartData<'doughnut'> = {
