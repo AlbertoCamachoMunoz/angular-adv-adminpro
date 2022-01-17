@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
   <div class="col-6">
     <div class="card">
       <div class="card-body">
@@ -14,4 +14,21 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div class="row">
+  <div class="col-6"><app-dona></app-dona></div>
+  <div class="col-6">
+    <app-dona
+      [data_dona]="Data_1"
+      [type_dona]="Type_1"
+      [title_dona]="Title_1"
+      [label_dona]="Label_1"
+    ></app-dona>
+  </div>
+  <!-- [data]="data_1" -->
+</div>
+<div class="row">
+  <div class="col-6"><app-dona></app-dona></div>
+  <div class="col-6"><app-dona></app-dona></div>
 </div>
