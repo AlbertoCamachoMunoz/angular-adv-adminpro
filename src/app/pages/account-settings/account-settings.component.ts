@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-account-settings',
@@ -6,24 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styles: [
   ]
 })
+  // working
 export class AccountSettingsComponent implements OnInit {
 
-  linkTheme : any = document.querySelector("#theme");
-  constructor() { }
+  
+
+  constructor( private settingsService:SettingsService ) { }
 
   ngOnInit(): void {
+    this.settingsService.checkCurrentTheme();
   }
 
   changeTheme(theme: string) {
-    // console.log(theme);
-    console.log(this.linkTheme);
-
-    let url = `./assets/css/colors/${theme}.css`;
-    console.log(url);
-    
-    this.linkTheme.setAttribute('href', url);
-    localStorage.setItem('theme', url);
-    
+    this.settingsService.changeTheme(theme);
   }
+  
 
 }
