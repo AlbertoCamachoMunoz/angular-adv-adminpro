@@ -38,4 +38,5 @@ export class PromesasComponent implements OnInit {
 				.then((body) => resolve(body))
 		})
 	}
+
 }
