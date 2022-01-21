@@ -20,12 +20,12 @@ const routes: Routes = [
 		component: PagesComponent,
 		children: [
 			// rutas hijas a partir del padre ej: http://localhost:4200/dashboard/progress
-			{ path: '', component: DashboardComponent },
-			{ path: 'progress', component: ProgressComponent },
-			{ path: 'grafica1', component: Grafica1Component },
-			{ path: 'account-settings', component: AccountSettingsComponent },
-			{ path: 'promesas', component: PromesasComponent },
-			{ path: 'rxjs', component: RxjsComponent }
+			{ path: '', component: DashboardComponent, data:{titulo: 'Dashboard'} },
+			{ path: 'progress', component: ProgressComponent, data:{titulo: 'Progress'} },
+			{ path: 'grafica1', component: Grafica1Component, data:{titulo: 'Grafica1'} },
+			{ path: 'account-settings', component: AccountSettingsComponent, data:{titulo: 'AccountSettings'} },
+			{ path: 'promesas', component: PromesasComponent, data:{titulo: 'Promesas'} },
+			{ path: 'rxjs', component: RxjsComponent, data:{titulo: 'Rxjs'} }
 		]
 	}
 ]
