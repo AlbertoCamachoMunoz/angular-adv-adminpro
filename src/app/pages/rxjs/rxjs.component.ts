@@ -1,67 +1,71 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { retry } from 'rxjs/operators'
 
 @Component({
-  selector: 'app-rxjs',
-  templateUrl: './rxjs.component.html',
-  styles: [
-  ]
+	selector: 'app-rxjs',
+	templateUrl: './rxjs.component.html',
+	styles: []
 })
-export class RxjsComponent {
+export class RxjsComponent implements OnDestroy{
+	//Called once, before the instance is destroyed.
+	//Add 'implements OnDestroy' to the class.
+	public varObserbable: Subscription;
 
-  constructor() {
+  	constructor() {
+    
+		this.varObserbable = this.retornaObservable()
+			.pipe(
+				// aunque tengamos un error continua con la operacion
+				// import { retry } from 'rxjs/operators'
+				// arg number 1, numero de intentos, para intentos ilimitados quitar el numero retry()
+				retry(1)
+			)
+			.subscribe({
+				next(valor) {
+					console.log('Current Position: ', valor)
+				},
+				error(error) {
+					console.log('Error Getting Location: ', error)
+				},
+				complete() {
+					console.log('Observer got a complete notification')
+				}
+			})
+		}
+	
+	// destruye el observable para que al cambiar de página lo destruya
+	ngOnDestroy(): void {
+		//Called once, before the instance is destroyed.
+		//Add 'implements OnDestroy' to the class.
+		this.varObserbable.unsubscribe();
+		
+	}
 
-    // // los observables funcionan aunque estemos en otra página, no solo en este componente ya que se almacena en memoria
-    // const obs$ = new Observable(observer => {
+	retornaObservable() {
+		let i = -1
+		const obs2$ = new Observable((observer) => {
+			const intervalo = setInterval(() => {
+				i++
+				// para retornar el valor
+				observer.next(i)
 
-    //   let i = -1;
-    //   const intervalo = setInterval(() => {
-		// 	  i++
-		// 	  // para retornar el valor
-    //     observer.next(i)
-        
-    //     if (i >= 4) {
-    //       // cancelar o parar el intervalo indicandole el nombre de este
-    //       clearInterval(intervalo)
-    //       // para indicar que el observable esta completado
-    //       observer.complete()
-    //     }
-    //     // para indicar error
-    //     // observer.error()
-		//   }, 2000)
+				if (i == 2) observer.error()
 
-      
-    // })
+				if (i >= 4) {
+					// cancelar o parar el intervalo indicandole el nombre de este
+					clearInterval(intervalo)
+					observer.complete()
+				}
 
-    // obs$.subscribe({
-    //   next(valor) { console.log('Current Position: ', valor) },
-    //   error(error) { console.log('Error Getting Location: ', error) },
-    //   complete() { console.log('Observer got a complete notification') }
-    // })
+				// para indicar error
+				// observer.error()
+			}, 2000)
+		})
+		return obs2$;
+  	}
+  
 
-    const obs2$ = new Observable(observer => {
-        let i = -1;
-            const intervalo = setInterval(() => {
-                i++
-                // para retornar el valor
-                observer.next(i)
-                if (i >= 4) {
-                    // cancelar o parar el intervalo indicandole el nombre de este
-                    clearInterval(intervalo)
-                    observer.complete()
-                }
-                // para indicar error
-                // observer.error()
-            }, 2000)
-    });
-
-    obs2$.subscribe({
-        next(valor)  { console.log('Current Position: ', valor) },
-        error(error) { console.log('Error Getting Location: ', error) },
-        complete()   { console.log('Observer got a complete notification') }
-    });
-
-  }
 }
 
 
