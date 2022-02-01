@@ -2,3 +2,10 @@
 #themecolors .selector{
     cursor: pointer;
 }
+
+#google-btn{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
