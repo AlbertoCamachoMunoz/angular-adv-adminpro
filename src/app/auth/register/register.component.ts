@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router'
 import Swal from 'sweetalert2'
 
 import { UsuarioService } from '../../services/usuario.service';
@@ -25,26 +26,31 @@ export class RegisterComponent {
 		}
 	)
 
-	constructor(private fb: FormBuilder, private usuarioService: UsuarioService) {}
+	constructor(
+		private fb: FormBuilder,
+		private usuarioService: UsuarioService,
+		private router: Router
+	) {}
 
 	crearUsuario() {
 		this.formSubmitted = true
-        
-        if (!this.registerForm.valid) return;
-        else this.usuarioService.crearUsuario(this.registerForm.value).subscribe({
-			next(resp) {
-				console.log(resp)
-			},
-			error(err) {
-				Swal.fire({
-					title: 'Error!',
-					text: `${err.error.msg} USUARIOS`,
-					icon: 'error',
-					confirmButtonText: 'ok'
-				})
-			}
-		})
+		const router_ = this.router
 
+		if (!this.registerForm.valid) return
+		else
+			this.usuarioService.crearUsuario(this.registerForm.value).subscribe({
+				next(resp) {
+					router_.navigateByUrl('/')
+				},
+				error(err) {
+					Swal.fire({
+						title: 'Error!',
+						text: `${err.error.msg} USUARIOS`,
+						icon: 'error',
+						confirmButtonText: 'ok'
+					})
+				}
+			})
 	}
 
 	aceptaTerminos(campo: string): boolean {

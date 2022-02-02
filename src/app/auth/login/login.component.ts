@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import Swal from 'sweetalert2'
@@ -13,7 +13,7 @@ declare const gapi:any;
 })
 export class LoginComponent implements OnInit {
 	public formSubmitted = false
-	public auth2: any;
+	public auth2: any
 
 	public loginForm = this.fb.group({
 		email: [localStorage.getItem('email') || '', [Validators.required, Validators.email]],
@@ -24,7 +24,8 @@ export class LoginComponent implements OnInit {
 	constructor(
 		private router: Router,
 		private fb: FormBuilder,
-		private usuarioService: UsuarioService
+		private usuarioService: UsuarioService,
+		private ngZone: NgZone
 	) {}
 
 	ngOnInit(): void {
@@ -32,16 +33,20 @@ export class LoginComponent implements OnInit {
 	}
 
 	login() {
-		const formLogin = this.loginForm
-		// this.router.navigateByUrl('/')
+		// las pasamos a constantes por que el this en la funcion no funciona por no ser una funcion de flecha
+		const loginForm_ = this.loginForm
+		const router_ = this.router
 		if (!this.loginForm.valid) return
 		else
 			this.usuarioService.loginUsuario(this.loginForm.value).subscribe({
-				next(resp){
-					if (formLogin.get('remember')?.value)
-						localStorage.setItem('email', formLogin.get('email')?.value),
-							localStorage.setItem('remember', formLogin.get('remember')?.value)
+				next(resp) {
+					if (loginForm_.get('remember')?.value)
+						localStorage.setItem('email', loginForm_.get('email')?.value),
+							localStorage.setItem('remember', loginForm_.get('remember')?.value)
 					else localStorage.removeItem('email')
+
+					// navegar al dashboard
+					router_.navigateByUrl('/')
 				},
 				error(err) {
 					Swal.fire({
@@ -54,7 +59,6 @@ export class LoginComponent implements OnInit {
 			})
 	}
 
-
 	renderButton() {
 		gapi.signin2.render('my-signin2', {
 			scope: 'profile email',
@@ -64,36 +68,32 @@ export class LoginComponent implements OnInit {
 			theme: 'dark'
 		})
 
-		this.startApp();
+		this.startApp()
 	}
 
-	startApp() {
-		let auth2_ = this.auth2;
-		gapi.load('auth2', () => {
-			// Retrieve the singleton for the GoogleAuth library and set up the client.
-			this.auth2 = gapi.auth2.init({
-				client_id:
-					'281197617357-0cngl2agoo9d5997pjl4j26i6btldk5b.apps.googleusercontent.com',
-				cookiepolicy: 'single_host_origin'
-			})
-			console.log('start google');
-			
-			this.attachSignin(document.getElementById('my-signin2'))
-		})
+	async startApp() {
+		await this.usuarioService.googleInit();
+		this.auth2 = this.usuarioService.auth2;
+		this.attachSignin(document.getElementById('my-signin2'))
 	}
 
 	attachSignin(element) {
-		this.auth2.attachClickHandler(element, {},
+		this.auth2.attachClickHandler(
+			element,
+			{},
 			(googleUser) => {
 				const id_token = googleUser.getAuthResponse().id_token
-				console.log('dentro google function');
-				console.log(id_token);
-				this.usuarioService.loginGoogle(id_token).subscribe()
-				// TODO MOVER AL DASHBOARD
-				
-			}, (error)=> {
-				alert(JSON.stringify(error, undefined, 2));
+				this.usuarioService.loginGoogle(id_token).subscribe((resp) => {
+					
+					this.ngZone.run(() => {
+						this.router.navigateByUrl('/')
+					})
+				}) 
+					
+			},
+			(error) => {
+				alert(JSON.stringify(error, undefined, 2))
 			}
-		);
-  }
+		)
+	}
 }
