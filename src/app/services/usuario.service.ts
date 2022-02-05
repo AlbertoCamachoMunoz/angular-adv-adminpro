@@ -18,28 +18,33 @@ declare const gapi: any
 	providedIn: 'root'
 })
 export class UsuarioService {
-	public auth2: any;
-	public usuario: Usuario | undefined;
+	public auth2: any
+	public usuario: Usuario | undefined
 
 	constructor(private http: HttpClient, private router: Router, private ngZone: NgZone) {
 		this.googleInit()
 	}
 
-	googleInit() {
+	get token(): string {
+		return localStorage.getItem('token') || ''
+	}
 
-		return new Promise<void>( ( resolve ) => {
+	get uid(): string {
+		return this.usuario?.uid || '';
+	}
+
+	googleInit() {
+		return new Promise<void>((resolve) => {
 			gapi.load('auth2', () => {
 				// Retrieve the singleton for the GoogleAuth library and set up the client.
 				this.auth2 = gapi.auth2.init({
 					client_id:
 						'281197617357-0cngl2agoo9d5997pjl4j26i6btldk5b.apps.googleusercontent.com',
 					cookiepolicy: 'single_host_origin'
-				});
-				resolve();
+				})
+				resolve()
 			})
-		});
-
-
+		})
 	}
 
 	logOut() {
@@ -52,12 +57,10 @@ export class UsuarioService {
 	}
 
 	validarToken(): Observable<boolean> {
-		const token = localStorage.getItem('token') || ''
-
 		return this.http
 			.get(`${base_url}/login/renew`, {
 				headers: {
-					'x-token': token
+					'x-token': this.token
 				}
 			})
 			.pipe(
@@ -65,7 +68,7 @@ export class UsuarioService {
 					const { nombre, email, img, google, rol } = resp.usuarioDb.object
 
 					localStorage.setItem('token', resp.token)
-					
+
 					this.usuario = new Usuario(
 						nombre,
 						email,
@@ -90,6 +93,26 @@ export class UsuarioService {
 				localStorage.setItem('token', resp.token)
 			})
 		)
+	}
+
+	actualizarUsuario(data: { email: string; nombre: string, rol: string }) {
+		data = {
+			...data,
+			rol: this.usuario?.rol || ''
+		}
+		console.log('actualizar Usuario')
+		console.log(data)
+		return this.http
+			.put(`${base_url}/usuarios/${this.uid}`, data, {
+				headers: {
+					'x-token': this.token
+				}
+			})
+			.pipe(
+				tap((resp: any) => {
+					localStorage.setItem('token', resp.token)
+				})
+			)
 	}
 
 	loginUsuario(formData: LoginForm) {

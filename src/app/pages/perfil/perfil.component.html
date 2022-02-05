@@ -4,7 +4,7 @@
 			<div class="card-body">
 				<h4 class="card-title">Mi perfil</h4>
 				<h6 class="card-subtitle">Ajustes</h6>
-				<form class="form p-t-20">
+				<form class="form p-t-20" [formGroup]="perfilForm" (ngSubmit)="sendForm()">
 					<div class="form-group">
 						<label for="exampleInputuname">User Name</label>
 						<div class="input-group">
@@ -14,6 +14,7 @@
 								class="form-control"
 								id="exampleInputuname"
 								placeholder="Username"
+								formControlName="nombre"
 							/>
 						</div>
 					</div>
@@ -26,6 +27,7 @@
 								class="form-control"
 								id="exampleInputEmail1"
 								placeholder="Enter email"
+								formControlName="email"
 							/>
 						</div>
 					</div>
