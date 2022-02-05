@@ -18,5 +18,15 @@ export class SidebarService {
 		}
 	]
 
+	menu_profile: any[] = [
+		{
+			titulo: 'Mi perfil',
+			icon: 'mdi mdi-gauge',
+			submenu: [
+				{ titulo: 'Perfil', url: '/perfil' },
+			]
+		}
+	]
+
 	constructor() {}
 }

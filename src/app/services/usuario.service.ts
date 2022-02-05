@@ -61,8 +61,7 @@ export class UsuarioService {
 				}
 			})
 			.pipe(
-				tap((resp: any) => {
-					console.log(resp.usuarioDb)
+				map((resp: any) => {
 					const { nombre, email, img, google, rol } = resp.usuarioDb.object
 
 					localStorage.setItem('token', resp.token)
@@ -76,9 +75,8 @@ export class UsuarioService {
 						rol,
 						resp.usuarioDb._id
 					)
-					console.log(this.usuario)
+					return true
 				}),
-				map((resp) => true),
 				catchError((error) => of(false))
 			)
 	}
