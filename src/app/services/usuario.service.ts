@@ -100,19 +100,14 @@ export class UsuarioService {
 			...data,
 			rol: this.usuario?.rol || ''
 		}
-		console.log('actualizar Usuario')
-		console.log(data)
+
 		return this.http
 			.put(`${base_url}/usuarios/${this.uid}`, data, {
 				headers: {
 					'x-token': this.token
 				}
 			})
-			.pipe(
-				tap((resp: any) => {
-					localStorage.setItem('token', resp.token)
-				})
-			)
+
 	}
 
 	loginUsuario(formData: LoginForm) {

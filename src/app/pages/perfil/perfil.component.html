@@ -4,7 +4,7 @@
 			<div class="card-body">
 				<h4 class="card-title">Mi perfil</h4>
 				<h6 class="card-subtitle">Ajustes</h6>
-				<form class="form p-t-20" [formGroup]="perfilForm" (ngSubmit)="sendForm()">
+				<form class="form p-t-20" [formGroup]="perfilForm" (ngSubmit)="actualizarPerfil()">
 					<div class="form-group">
 						<label for="exampleInputuname">User Name</label>
 						<div class="input-group">
@@ -50,12 +50,14 @@
 				<h4 class="card-title">Avatar</h4>
 				<h6 class="card-subtitle">Imagen de usuario</h6>
 				<img src="" />
-				<input type="file" />
+				<input type="file" (change)="cambiarImagen($event)" />
 				<br />
 				<br />
 				<button
 					type="submit"
 					class="btn btn-block btn-success waves-effect waves-light m-r-10"
+					[disabled]="!imagenSubir"
+					(click)="subirImagen()"
 				>
 					<i class="fa fa-save"></i>
 					Cambiar imagen
