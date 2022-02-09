@@ -19,7 +19,8 @@ export class PerfilComponent implements OnInit {
 	public perfilForm: FormBuilder | any
 
 	public usuario?: Usuario
-	public imagenSubir!: File;
+	public imagenSubir!: File
+	public imgTemp: any = ''
 
 	constructor(
 		private fb: FormBuilder,
@@ -47,7 +48,12 @@ export class PerfilComponent implements OnInit {
 					console.log(resp)
 					this.usuario!.nombre = this.perfilForm.value.nombre
 					this.usuario!.email = this.perfilForm.value.email
-					console.log(this.usuario)
+					Swal.fire({
+						title: 'Success!',
+						text: `${this.usuario!.nombre} USUARIOS`,
+						icon: 'success',
+						confirmButtonText: 'ok'
+					})
 				},
 				error: (err) => {
 					Swal.fire({
@@ -61,16 +67,42 @@ export class PerfilComponent implements OnInit {
 	}
 
 	cambiarImagen(event) {
-		
+
 		if (event?.target?.files[0]) this.imagenSubir = event.target.files[0]
-		console.log(this.imagenSubir)
+
+		if (!this.imagenSubir) {
+			this.imgTemp = ''
+			return;	
+		} 
+		const reader = new FileReader()
+
+		reader.onloadend = () => {
+			console.log(reader.result)
+			this.imgTemp = reader.result
+		}
 	}
 
 	subirImagen() {
-		console.log(this.imagenSubir);
-		
-		this.fileUploadService.actializarFoto(this.imagenSubir, 'usuarios', this.usuario!.uid || '')
-			.then( (img) => { console.log(img) })
-			.catch( (err)    => { console.warn(err) } )
+		console.log(this.imagenSubir)
+
+		this.fileUploadService
+			.actializarFoto(this.imagenSubir, 'usuarios', this.usuario!.uid || '')
+			.then((img) => {
+				this.usuario!.img = img
+				Swal.fire({
+					title: 'Success!',
+					text: `${this.usuario!.nombre} USUARIOS`,
+					icon: 'success',
+					confirmButtonText: 'ok'
+				})
+			})
+			.catch((err) => {
+				Swal.fire({
+					title: 'Error!',
+					text: `${err.error.msg} USUARIOS`,
+					icon: 'error',
+					confirmButtonText: 'ok'
+				})
+			})
 	}
 }
